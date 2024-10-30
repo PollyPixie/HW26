@@ -8,70 +8,66 @@
 import UIKit
 
 class ViewController: UIViewController {
-	
-	private let viewA = UIView()
-	private let viewB = UIView()
-	private let viewC = UIView()
-	private let viewD = UIView()
-	private let viewE = UIView()
-	
-	override func viewDidLoad() {
-		super.viewDidLoad()
-		addSubViews()
-		setupViews()
-		addLabels()
-		setupLayout()
-	}
+    
+    private let viewA = CustomView(backgroundColor: .lightGray, viewName: "A")
+    private let viewB = CustomView(backgroundColor: .red, viewName: "B")
+    private let viewC = CustomView(backgroundColor: .blue, viewName: "C")
+    private let viewD = CustomView(backgroundColor: .yellow, viewName: "D")
+    private let viewE = CustomView(backgroundColor: .green, viewName: "E")
+    
+    private let label = UILabel()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .white
+        
+        setupViews()
+    }
 }
 
+// MARK: -> ViewTappedDelegate
+extension ViewController: ViewTappedDelegate {
+    func didTapView(withName name: String) {
+        label.text = "Нажата вью: \(name)"
+    }
+}
+    
+    
+// MARK: -> Setup Views
 private extension ViewController {
-	func addSubViews() {
+    func setupViews() {
+        addSubViews()
+        setupLabel()
+        setupDelegates()
+        setupLayout()
+    }
+    
+    func addSubViews() {
 		view.addSubview(viewA)
-		
 		viewA.addSubview(viewB)
 		viewA.addSubview(viewC)
 		viewB.addSubview(viewD)
 		viewC.addSubview(viewE)
+        
+        view.addSubview(label)
 	}
-	
-	func setupViews() {
-		view.backgroundColor = .white
-		
-		viewA.backgroundColor = .lightGray
-		viewB.backgroundColor = .red
-		viewC.backgroundColor = .blue
-		viewD.backgroundColor = .yellow
-		viewE.backgroundColor = .green
-	}
-	
-	func addLabels() {
-		addLabel(to: viewA, text: "A")
-		addLabel(to: viewB, text: "B")
-		addLabel(to: viewC, text: "C")
-		addLabel(to: viewD, text: "D")
-		addLabel(to: viewE, text: "E")
-	}
-	
+    
+    func setupLabel() {
+        label.text = "Здесь будет название выбранной вью"
+        label.font = .systemFont(ofSize: 16, weight: .bold)
+        label.textAlignment = .center
+    }
+    
+    func setupDelegates() {
+        viewA.delegate = self
+        viewB.delegate = self
+        viewC.delegate = self
+        viewD.delegate = self
+        viewE.delegate = self
+    }
 }
 
-// MARK: -> Private Methods
-private extension ViewController {
-	func addLabel(to view: UIView, text: String) {
-		let label = UILabel()
-		label.text = text
-		label.font = UIFont.boldSystemFont(ofSize: 24)
-		label.textColor = .black
-		label.translatesAutoresizingMaskIntoConstraints = false
-		view.addSubview(label)
-		
-		NSLayoutConstraint.activate([
-			label.topAnchor.constraint(equalTo: view.topAnchor, constant: 5),
-			label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 5)
-		])
-	}
-	
-}
-
+// MARK: -> Setup Layout
 private extension ViewController {
 	func setupLayout() {
 		viewA.translatesAutoresizingMaskIntoConstraints = false
@@ -79,6 +75,7 @@ private extension ViewController {
 		viewC.translatesAutoresizingMaskIntoConstraints = false
 		viewD.translatesAutoresizingMaskIntoConstraints = false
 		viewE.translatesAutoresizingMaskIntoConstraints = false
+        label.translatesAutoresizingMaskIntoConstraints = false
 		
 		NSLayoutConstraint.activate([
 			
@@ -106,6 +103,10 @@ private extension ViewController {
 			viewE.centerXAnchor.constraint(equalTo: viewC.centerXAnchor),
 			viewE.widthAnchor.constraint(equalToConstant: 80),
 			viewE.heightAnchor.constraint(equalToConstant: 120),
+            
+            label.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -50),
+            label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            label.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
 		])
 	}
 }
