@@ -59,19 +59,12 @@ class CustomView: UIView {
     }
     
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-        guard isUserInteractionEnabled, !isHidden, alpha > 0 else {
-            return nil
-        }
-        
         let touchedView = super.hitTest(point, with: event)
         
         if let customView = touchedView as? CustomView,  let viewName = customView.viewName {
             delegate?.didTapView(withName: viewName)
-            return customView
-        } else {
-            print("nil")
-            return nil
         }
+        return touchedView
     }
 }
 
